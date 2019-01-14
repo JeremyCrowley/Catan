@@ -1,17 +1,68 @@
 
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "Catan.h"
 #include "Graph.h"
-
+#include "Visualize.h"
 
 
 
 int main() 
 {
+	// configure catan board
 	Catan catan;
-
 	catan.initBoard();
-	catan.printBoard();
+
+
+
+
+
+	if (SDL_Init(SDL_INIT_VIDEO) == 0) {
+
+		SDL_Window* window = NULL;
+		SDL_Renderer* renderer = NULL;
+
+		if (SDL_CreateWindowAndRenderer(XLEN, YLEN, 0, &window, &renderer) == 0) {
+
+
+
+			SDL_bool done = SDL_FALSE;
+
+			SDL_Surface *s;
+
+			while (!done) {
+
+				// initialize window
+				SDL_Event event;
+				SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+				SDL_RenderClear(renderer);
+				SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+				// draw the board here
+				drawBoard(renderer, catan);
+
+				// render
+				SDL_RenderPresent(renderer);
+
+
+				// check for exit event
+				while (SDL_PollEvent(&event)) {
+					if (event.type == SDL_QUIT) {
+						done = SDL_TRUE;
+					}
+				}
+			}
+		}
+	}
+	
+	SDL_Quit();
+
+
+	
+	
+	
+	//catan.printBoard();
 	/*
 	Graph g;
 

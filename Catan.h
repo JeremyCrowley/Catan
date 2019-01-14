@@ -16,6 +16,10 @@ using namespace std;
 #define NUM_ROWS 6
 #define NUM_COLS {7, 9, 11, 11, 9, 7}
 
+#define NUM_VERTEDGES {4, 5, 6, 5, 4}
+
+#define LOC_PER_TILE 6
+
 #define CORNER_X 11
 #define CORNER_Y 6
 
@@ -28,6 +32,9 @@ using namespace std;
 #define NUM_WHEAT 4
 #define NUM_ORE 3
 #define NUM_DESERT 1
+
+#define NUM_TILETYPES 6
+#define NUM_TILENUMS 11
 
 #define TILE_COUNT {NUM_WOOD, NUM_BRICK, NUM_SHEEP, NUM_WHEAT, NUM_ORE, NUM_DESERT}
 #define NUMS_COUNT {1,2,2,2,2,0,2,2,2,2,1}
@@ -59,19 +66,43 @@ enum HexSide
 	Side_Road
 };
 
+// struct for a tile
+struct tile_t
+{
+	int tileNum;
+	int tileType;
+	int diceVal;
+	int locations[LOC_PER_TILE];
+};
+
 class Catan
 {
 	private:
 
-		Graph locations;
+		Graph board;
+		vector<tile_t> tiles;
 
+		// specific desert position
+		int desertPos;
 
 
 	public:
 
 		void initBoard(void);
 
+		void createLocationGraph(void);
+
+		void createTileVector(void);
+
+		int* genBoard(void);
+
+		int* genNumbers(void);
+
 		void printBoard(void);
+
+		void printTiles(int* boardTile);
+
+		vector<tile_t> getTiles(void);
 
 
 

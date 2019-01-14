@@ -20,6 +20,7 @@ using namespace std;
 struct node_t
 {
 	int val;
+	int state;
 	vector<node_t> neighbors;
 };
 
@@ -48,8 +49,8 @@ class Graph
 		// adds edge between node1 and node 2
 		void addEdge(int node1, int node2);
 
+		// adds created a sequence of edges from start to end
 		void addEdgesLinear(int start, int end);
-
 
 		// prints node set and edge set
 		void printGraph(void);

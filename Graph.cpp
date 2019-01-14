@@ -1,6 +1,6 @@
 
-
 #include "Graph.h"
+#include "Catan.h"
 
 // initializes graph with n nodes and no edges
 void Graph::init(int n)
@@ -12,6 +12,8 @@ void Graph::init(int n)
 	{
 		nodeVec.push_back(node_t());
 		nodeVec[i].val = i;
+		nodeVec[i].state = Corner_Empty;
+
 	}
 }
 
