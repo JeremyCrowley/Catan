@@ -10,12 +10,10 @@
 
 int main() 
 {
+
 	// configure catan board
 	Catan catan;
 	catan.initBoard();
-
-
-
 
 
 	if (SDL_Init(SDL_INIT_VIDEO) == 0) {
@@ -31,19 +29,25 @@ int main()
 
 			SDL_Surface *s;
 
+
+			if(TTF_Init()==-1) {
+				printf("TTF_Init: %s\n", TTF_GetError());
+			}
+			// initialize window
+			SDL_Event event;
+			SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+			SDL_RenderClear(renderer);
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+			// draw the board here
+			drawBoard(renderer, catan);
+
+			// render
+			SDL_RenderPresent(renderer);	
+
 			while (!done) {
 
-				// initialize window
-				SDL_Event event;
-				SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-				SDL_RenderClear(renderer);
-				SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-
-				// draw the board here
-				drawBoard(renderer, catan);
-
-				// render
-				SDL_RenderPresent(renderer);
+				
 
 
 				// check for exit event
@@ -57,6 +61,7 @@ int main()
 	}
 	
 	SDL_Quit();
+	TTF_Quit();
 
 
 	
@@ -76,6 +81,8 @@ int main()
     return 0;
 
 }
+
+
 
 
 

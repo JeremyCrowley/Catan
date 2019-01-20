@@ -3,8 +3,12 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
+
+extern "C"{
+	#include <SDL2/SDL.h>
+	#include <SDL2/SDL_ttf.h>	
+}
+
 
 #include "Catan.h"
 
@@ -44,5 +48,7 @@ void drawOre(SDL_Renderer* renderer, int x, int y);
 void drawDesert(SDL_Renderer* renderer, int x, int y);
 
 void drawBoard(SDL_Renderer* renderer, Catan catan);
+
+void fillNumbers(SDL_Renderer* renderer, Catan catan);
 
 #endif

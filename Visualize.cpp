@@ -52,6 +52,8 @@ void fillHexagon(SDL_Renderer* renderer, int x, int y, int resource)
 	{
 		// Error, not valid resource
 	}
+
+	// set drawing back to white for hexagon sides
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
 }
@@ -464,23 +466,8 @@ void drawDesert(SDL_Renderer* renderer, int x, int y)
 
 void drawBoard(SDL_Renderer* renderer, Catan catan)
 {	
+	
 	/*
-	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24); //this opens a font style and sets a size
-
-	SDL_Color White = {255, 255, 255};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
-
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-
-	SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage); //now you can convert it into a texture
-
-	SDL_Rect Message_rect; //create a rect
-	Message_rect.x = 100;  //controls the rect's x coordinate 
-	Message_rect.y = 100; // controls the rect's y coordinte
-	Message_rect.w = 100; // controls the width of the rect
-	Message_rect.h = 100; // controls the height of the rect
-	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-	*/
-
 	vector<tile_t> boardTiles = catan.getTiles();
 	
 	// draw hexagon tiles with numbers
@@ -506,8 +493,41 @@ void drawBoard(SDL_Renderer* renderer, Catan catan)
 	{
 		drawHexagon(renderer, XMID+CENTER_X_START+i*HEX_WIDTH, YMID+CENTER_Y);
 		fillHexagon(renderer, XMID+CENTER_X_START+i*HEX_WIDTH, YMID+CENTER_Y, boardTiles[i+7].tileType);
-
-		
 	}
+	*/
+	
+	fillNumbers(renderer, catan);
 
+}
+
+void fillNumbers(SDL_Renderer* renderer, Catan catan)
+{
+	SDL_Rect dstrect;
+
+	dstrect.x = 640/2;
+	dstrect.y = 480/2;
+	dstrect.w = 32;
+	dstrect.h = 32;
+	SDL_Color color={255,0,255};
+
+	
+	TTF_Font *font = TTF_OpenFont("Arial.ttf", 28);
+	if(!font)
+	{
+		cout << TTF_GetError() << "\n";
+	}
+	
+	SDL_Surface* textSurface = TTF_RenderText_Blended(font, "Text to render", color);
+	if(!textSurface)
+	{
+		cout << TTF_GetError() << "\n";	
+	}
+	
+	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	if(!textTexture)
+	{
+		cout << TTF_GetError() << "\n";	
+	}
+	
+	SDL_RenderCopy(renderer, textTexture, NULL, &dstrect);
 }
