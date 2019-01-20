@@ -49,6 +49,8 @@ void drawDesert(SDL_Renderer* renderer, int x, int y);
 
 void drawBoard(SDL_Renderer* renderer, Catan catan);
 
-void fillNumbers(SDL_Renderer* renderer, Catan catan);
+void drawNumber(SDL_Renderer* renderer, Catan catan, int num);
+
+void createHexagon(SDL_Renderer* renderer, Catan catan, tile_t tile, int x, int y);
 
 #endif

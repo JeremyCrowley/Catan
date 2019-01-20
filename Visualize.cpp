@@ -467,67 +467,108 @@ void drawDesert(SDL_Renderer* renderer, int x, int y)
 void drawBoard(SDL_Renderer* renderer, Catan catan)
 {	
 	
-	/*
+	// get tile vector
 	vector<tile_t> boardTiles = catan.getTiles();
 	
 	// draw hexagon tiles with numbers
 	for(int i = 0; i < 3; i++)
 	{
-		drawHexagon(renderer, XMID+FAR_X_START+i*HEX_WIDTH, YMID+FAR_Y);
-		fillHexagon(renderer, XMID+FAR_X_START+i*HEX_WIDTH, YMID+FAR_Y, boardTiles[i].tileType);
+		// top row
+		createHexagon(renderer, catan, boardTiles[i], XMID+FAR_X_START+i*HEX_WIDTH, YMID+FAR_Y);
 
-		drawHexagon(renderer, XMID+FAR_X_START+i*HEX_WIDTH, YMID-FAR_Y);
-		fillHexagon(renderer, XMID+FAR_X_START+i*HEX_WIDTH, YMID-FAR_Y, boardTiles[i+16].tileType);
+		// bottom row
+		createHexagon(renderer, catan, boardTiles[i+16], XMID+FAR_X_START+i*HEX_WIDTH, YMID-FAR_Y);
 	}
 
 	for(int i = 0; i < 4; i++)
-	{
-		drawHexagon(renderer, XMID+MID_X_START+i*HEX_WIDTH, YMID+MID_Y);
-		fillHexagon(renderer, XMID+MID_X_START+i*HEX_WIDTH, YMID+MID_Y, boardTiles[i+3].tileType);
+	{	
+		// upper middle row
+		createHexagon(renderer, catan, boardTiles[i+3], XMID+MID_X_START+i*HEX_WIDTH, YMID+MID_Y);
 
-		drawHexagon(renderer, XMID+MID_X_START+i*HEX_WIDTH, YMID-MID_Y);
-		fillHexagon(renderer, XMID+MID_X_START+i*HEX_WIDTH, YMID-MID_Y, boardTiles[i+12].tileType);
+		// lower middle row
+		createHexagon(renderer, catan, boardTiles[i+12], XMID+MID_X_START+i*HEX_WIDTH, YMID-MID_Y);
 	}
 
 	for(int i = 0; i < 5; i++)
 	{
-		drawHexagon(renderer, XMID+CENTER_X_START+i*HEX_WIDTH, YMID+CENTER_Y);
-		fillHexagon(renderer, XMID+CENTER_X_START+i*HEX_WIDTH, YMID+CENTER_Y, boardTiles[i+7].tileType);
+		// middle row
+		createHexagon(renderer, catan, boardTiles[i+7], XMID+CENTER_X_START+i*HEX_WIDTH, YMID+CENTER_Y);
 	}
-	*/
-	
-	fillNumbers(renderer, catan);
 
+	return;
 }
 
-void fillNumbers(SDL_Renderer* renderer, Catan catan)
-{
+void drawNumber(SDL_Renderer* renderer, Catan catan, int x, int y, int num)
+{	
+	// dessert, no number to place
+	if(num == -1)
+	{
+		return;
+	}
+
+	// declare destination rectangle and color
 	SDL_Rect dstrect;
+	SDL_Color color={255,255,255};
 
-	dstrect.x = 640/2;
-	dstrect.y = 480/2;
-	dstrect.w = 32;
-	dstrect.h = 32;
-	SDL_Color color={255,0,255};
+	SDL_Surface* textSurface;
+	SDL_Texture* textTexture;
 
-	
-	TTF_Font *font = TTF_OpenFont("Arial.ttf", 28);
+	// open font
+	TTF_Font *font = TTF_OpenFont("Arial Black.ttf", 16);
 	if(!font)
 	{
 		cout << TTF_GetError() << "\n";
 	}
+
 	
-	SDL_Surface* textSurface = TTF_RenderText_Blended(font, "Text to render", color);
+	// size rectangle based on one or two digits
+	if(num < 10)
+	{
+		dstrect.x = x-6;
+		dstrect.y = y-8;
+		dstrect.w = 12;
+		dstrect.h = 16;
+	}
+	else
+	{
+		dstrect.x = x-10;
+		dstrect.y = y-8;
+		dstrect.w = 20;
+		dstrect.h = 16;
+	}
+	
+
+	// convert to char *
+	string numStr = to_string(num);
+	const char* numChar = numStr.c_str();
+	
+	// create surface
+	textSurface = TTF_RenderText_Blended(font, numChar, color);
 	if(!textSurface)
 	{
 		cout << TTF_GetError() << "\n";	
 	}
 	
-	SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+	// create texture
+	textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
 	if(!textTexture)
 	{
 		cout << TTF_GetError() << "\n";	
 	}
-	
-	SDL_RenderCopy(renderer, textTexture, NULL, &dstrect);
+
+	// copy to destination
+	SDL_RenderCopy(renderer, textTexture, NULL, &dstrect);	
+
+	return;
 }
+
+void createHexagon(SDL_Renderer* renderer, Catan catan, tile_t tile, int x, int y)
+{
+	drawHexagon(renderer, x, y);
+	fillHexagon(renderer, x, y, tile.tileType);
+	drawNumber(renderer, catan, x, y, tile.diceVal);
+
+	return;
+}
+
+
